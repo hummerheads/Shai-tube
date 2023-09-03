@@ -2,39 +2,41 @@ const LoadCategories = async(id) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/category/${id}`);
     const data = await res.json();
     let categories = data.data;
-    
     categoryALL(categories);
-    
+
     if(data.status !== true){
         drawingCategory(categories);
     }
-    
-    
 }
 const LoadCategory = async() => {
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/categories`);
     const data = await res.json();
     let categorys = data.data;
-
+  
     everyButton(categorys);
 }
-
-
-
 const categoryALL = categories => {
 
     const categoryVideo = document.getElementById('Videos');
     categoryVideo.innerText = '';
-
     categories.forEach((category) => {
 
+        const totalTime = category.others.posted_date;
+        const totalHours = Math.round(totalTime / 3600);
+        const leftTime = Math.round(totalTime % 3600);
+        const totalMinutes = Math.round(leftTime / 60);
         const allContainer = document.createElement('div');
         allContainer.classList = 'py-5 mx-auto';
         allContainer.innerHTML = `
         <div class="bg-base-100">
-        <figure class="">
+        <div class="relative">
+        <figure>
           <img class="h-52 w-80 rounded-xl" src="${category.thumbnail}" alt="" class="py-5" />
         </figure>
+        <div class="${totalTime ? "display" : "hidden"} absolute m-1 p-2 right-0 bottom-0 rounded">
+        <p class="bg-black text-xs w-full	font-normal	text-white">${totalHours}hrs ${totalMinutes}min ago<p>
+        </div>
+        </div>
         <div class="flex gap-3 items-center	pt-5 pl-1">
           <div>
             <div class="avatar">
@@ -60,10 +62,8 @@ const categoryALL = categories => {
         </div>
       </div>
         `;
-    
         categoryVideo.appendChild(allContainer);
     })
-
 }
 const everyButton = categorys =>{
 
@@ -82,7 +82,7 @@ const drawingCategory = categories => {
 
     const categoryVideo = document.getElementById('Videos');
     const drawingcontainer = document.createElement('div');
-    drawingcontainer.classList = 'mx-auto w-screen py-52';
+    drawingcontainer.classList = 'mx-auto w-screen py-52 ';
     drawingcontainer.innerHTML = `
     <div>
         <figure><img class="w-36 mx-auto" src="img/Icon.png" alt=""></figure>
@@ -93,22 +93,5 @@ const drawingCategory = categories => {
     `;
     categoryVideo.appendChild(drawingcontainer);
 }
-
-// ${LoadCategory(category_id)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 LoadCategory();
 LoadCategories(id);
